@@ -1,0 +1,75 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: sazon_patrimonial_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-sazon_admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sazon_secure_2024}
+      POSTGRES_DB: ${DB_NAME:-sazon_patrimonial}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${DB_PORT:-5436}:5436"  # ⬅️ CAMBIAR AQUÍ (5436 en host, 5432 en contenedor)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    networks:
+      - sazon_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-sazon_admin} -d ${DB_NAME:-sazon_patrimonial}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # pgAdmin - Interfaz web para administrar PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: sazon_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@sazonpatrimonial.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - sazon_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Prisma Studio (Opcional para desarrollo)
+  prisma-studio:
+    image: node:20-alpine
+    container_name: sazon_prisma_studio
+    working_dir: /app
+    command: sh -c "npm install && npx prisma studio --browser none --port 5555"
+    ports:
+      - "5555:5555"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-sazon_admin}:${DB_PASSWORD:-sazon_secure_2024}@postgres:5432/${DB_NAME:-sazon_patrimonial}?schema=public  # ⬅️ NOTA: Aquí usa 5432 porque es interno al contenedor
+    networks:
+      - sazon_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  sazon_network:
+    driver: bridge
+    name: sazon_patrimonial_network

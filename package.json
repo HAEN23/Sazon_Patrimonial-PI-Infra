@@ -1,26 +1,59 @@
 {
-  "name": "sp_infra",
-  "version": "0.1.0",
-  "private": true,
+  "name": "sazon-patrimonial-infra",
+  "version": "1.0.0",
+  "description": "Infraestructura de base de datos para Sazon Patrimonial con Prisma y Docker",
+  "main": "src/index.ts",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:reset": "prisma migrate reset --force",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:clean": "docker-compose down -v",
+    
+    "db:push": "prisma db push",
+    "db:pull": "prisma db pull",
+    "db:reset": "npm run prisma:migrate:reset && npm run prisma:seed",
+    "db:backup": "sh scripts/backup.sh",
+    "db:restore": "sh scripts/restore.sh",
+    
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\" \"prisma/**/*.ts\""
   },
+  "keywords": ["prisma", "postgresql", "docker", "orm", "database"],
+  "author": "HAEN23",
+  "license": "MIT",
   "dependencies": {
-    "next": "16.1.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "@prisma/client": "^5.20.0",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@types/node": "^20.14.0",
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.2",
+    "prisma": "^5.20.0",
+    "ts-jest": "^29.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
   }
 }

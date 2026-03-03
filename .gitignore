@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+*.lcov
 
 # next.js
 /.next/
@@ -19,9 +20,11 @@
 
 # production
 /build
+dist/
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
 
 # debug
@@ -33,9 +36,35 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Prisma
+prisma/.env
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker volumes
+postgres_data/
+pgadmin_data/
+
+# Backups
+backups/*.sql
+backups/*.sql.gz
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
