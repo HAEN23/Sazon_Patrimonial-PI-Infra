@@ -7,7 +7,7 @@ async function main() {
   console.log('🌱 Iniciando seed de la base de datos...\n');
 
   try {
-    // ========== ROLES ==========
+  
     console.log('📌 Creando roles...');
     const rolAdmin = await prisma.rol.upsert({
       where: { id_rol: 1 },
@@ -32,10 +32,10 @@ async function main() {
     console.log(`   - ${rolRestaurantero.nombre_rol} (ID: ${rolRestaurantero.id_rol})`);
     console.log(`   - ${rolUsuario.nombre_rol} (ID: ${rolUsuario.id_rol})\n`);
 
-    // ========== USUARIOS (CON BCRYPT) ==========
+    
     console.log('📌 Creando usuarios con contraseñas hasheadas...');
     
-    // Hashear contraseñas
+   
     const adminPassword = await bcrypt.hash('admin123', 10);
     const restPassword = await bcrypt.hash('rest123', 10);
     const userPassword = await bcrypt.hash('user123', 10);
@@ -81,10 +81,10 @@ async function main() {
     console.log(`   - ${restaurantero.nombre} (${restaurantero.correo})`);
     console.log(`   - ${usuario1.nombre} (${usuario1.correo})\n`);
 
-    // ========== SOLICITUD DE REGISTRO ==========
+   
     console.log('📌 Creando solicitud de registro...');
     
-    let solicitud = await prisma.solicitudRegistro.findFirst({
+    let solicitud = await prisma.solicitud_registro.findFirst({
       where: {
         nombre_propuesto_restaurante: 'La Casa del Sabor',
         id_usuario: restaurantero.id_usuario,
@@ -92,7 +92,7 @@ async function main() {
     });
 
     if (!solicitud) {
-      solicitud = await prisma.solicitudRegistro.create({
+      solicitud = await prisma.solicitud_registro.create({
         data: {
           fecha: new Date('2024-01-15'),
           estado: 'Aprobado',
@@ -143,7 +143,7 @@ async function main() {
     // ========== REVISIÓN DE SOLICITUD ==========
     console.log('📌 Creando revisión de solicitud...');
     
-    const revisionExiste = await prisma.revisionSolicitud.findFirst({
+    const revisionExiste = await prisma.revision_solicitud.findFirst({
       where: {
         id_solicitud: solicitud.id_solicitud,
         id_usuario: admin.id_usuario,
@@ -151,7 +151,7 @@ async function main() {
     });
 
     if (!revisionExiste) {
-      await prisma.revisionSolicitud.create({
+      await prisma.revision_solicitud.create({
         data: {
           fecha: '2024-01-16',
           id_solicitud: solicitud.id_solicitud,
@@ -239,7 +239,7 @@ async function main() {
     const totalRoles = await prisma.rol.count();
     const totalUsuarios = await prisma.usuario.count();
     const totalRestaurantes = await prisma.restaurante.count();
-    const totalSolicitudes = await prisma.solicitudRegistro.count();
+    const totalSolicitudes = await prisma.solicitud_registro.count();
 
     console.log(`   - ${totalRoles} roles`);
     console.log(`   - ${totalUsuarios} usuarios`);

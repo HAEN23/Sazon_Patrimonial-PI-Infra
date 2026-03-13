@@ -31,6 +31,9 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\" \"prisma/**/*.ts\""
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [
     "prisma",
     "postgresql",
