@@ -4,9 +4,9 @@
   "description": "Infraestructura de base de datos para Sazon Patrimonial con Prisma y Docker",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "next dev",
     "build": "next build",
-    "start": "node dist/index.js",
+    "start": "next start",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name",
     "prisma:migrate:deploy": "prisma migrate deploy",
