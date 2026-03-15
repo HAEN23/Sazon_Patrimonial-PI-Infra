@@ -14,7 +14,7 @@ export class ComprobanteRepository {
             nombre: true,
           },
         },
-        solicitud: {
+        solicitud_registro: {
           select: {
             id_solicitud: true,
             nombre_propuesto_restaurante: true,
@@ -43,7 +43,7 @@ export class ComprobanteRepository {
       where: { id_comprobante: id },
       include: {
         restaurante: true,
-        solicitud: true,
+        solicitud_registro: true,
         usuario: true,
       },
     });
@@ -57,7 +57,7 @@ export class ComprobanteRepository {
       data,
       include: {
         restaurante: true,
-        solicitud: true,
+        solicitud_registro: true,
         usuario: true,
       },
     });
@@ -85,7 +85,7 @@ export class ComprobanteRepository {
             correo: true,
           },
         },
-        solicitud: true,
+        solicitud_registro: true,
       },
       orderBy: {
         fecha_subida: 'desc',
@@ -126,7 +126,7 @@ export class ComprobanteRepository {
             nombre: true,
           },
         },
-        solicitud: {
+        solicitud_registro: {
           select: {
             nombre_propuesto_restaurante: true,
             estado: true,

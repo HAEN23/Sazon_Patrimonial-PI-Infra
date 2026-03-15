@@ -9,7 +9,7 @@ export class SolicitudRepository {
    * Obtener todas las solicitudes
    */
   async findAll() {
-    return await prisma.solicitudRegistro.findMany({
+    return await prisma.solicitud_registro.findMany({
       include: {
         usuario: {
           select: {
@@ -18,8 +18,8 @@ export class SolicitudRepository {
             correo: true,
           },
         },
-        restaurantes: true,
-        revisiones: {
+        restaurante: true,
+        revision_solicitud: {
           include: {
             usuario: {
               select: {
@@ -29,7 +29,7 @@ export class SolicitudRepository {
             },
           },
         },
-        comprobantes: true,
+        comprobante: true,
       },
       orderBy: {
         fecha: 'desc',
@@ -41,17 +41,17 @@ export class SolicitudRepository {
    * Obtener solicitud por ID
    */
   async findById(id: number) {
-    return await prisma.solicitudRegistro.findUnique({
+    return await prisma.solicitud_registro.findUnique({
       where: { id_solicitud: id },
       include: {
         usuario: true,
-        restaurantes: true,
-        revisiones: {
+        restaurante: true,
+        revision_solicitud: {
           include: {
             usuario: true,
           },
         },
-        comprobantes: true,
+        comprobante: true,
       },
     });
   }
@@ -60,7 +60,7 @@ export class SolicitudRepository {
    * Crear nueva solicitud
    */
   async create(data: ICreateSolicitudRegistro) {
-    return await prisma.solicitudRegistro.create({
+    return await prisma.solicitud_registro.create({
       data,
       include: {
         usuario: true,
@@ -72,12 +72,12 @@ export class SolicitudRepository {
    * Actualizar solicitud
    */
   async update(id: number, data: IUpdateSolicitudRegistro) {
-    return await prisma.solicitudRegistro.update({
+    return await prisma.solicitud_registro.update({
       where: { id_solicitud: id },
       data,
       include: {
         usuario: true,
-        revisiones: true,
+        revision_solicitud: true,
       },
     });
   }
@@ -86,7 +86,7 @@ export class SolicitudRepository {
    * Eliminar solicitud
    */
   async delete(id: number) {
-    return await prisma.solicitudRegistro.delete({
+    return await prisma.solicitud_registro.delete({
       where: { id_solicitud: id },
     });
   }
@@ -95,7 +95,7 @@ export class SolicitudRepository {
    * Obtener solicitudes por estado
    */
   async findByEstado(estado: string) {
-    return await prisma.solicitudRegistro.findMany({
+    return await prisma.solicitud_registro.findMany({
       where: { estado },
       include: {
         usuario: {
@@ -104,7 +104,7 @@ export class SolicitudRepository {
             correo: true,
           },
         },
-        restaurantes: true,
+        restaurante: true,
       },
       orderBy: {
         fecha: 'desc',
@@ -137,12 +137,12 @@ export class SolicitudRepository {
    * Obtener solicitudes por usuario
    */
   async findByUsuario(id_usuario: number) {
-    return await prisma.solicitudRegistro.findMany({
+    return await prisma.solicitud_registro.findMany({
       where: { id_usuario },
       include: {
-        restaurantes: true,
-        revisiones: true,
-        comprobantes: true,
+        restaurante: true,
+        revision_solicitud: true,
+        comprobante: true,
       },
       orderBy: {
         fecha: 'desc',
@@ -154,7 +154,7 @@ export class SolicitudRepository {
    * Cambiar estado de solicitud
    */
   async cambiarEstado(id: number, estado: string) {
-    return await prisma.solicitudRegistro.update({
+    return await prisma.solicitud_registro.update({
       where: { id_solicitud: id },
       data: { estado },
     });
@@ -164,7 +164,7 @@ export class SolicitudRepository {
    * Contar solicitudes por estado
    */
   async countByEstado(estado: string) {
-    return await prisma.solicitudRegistro.count({
+    return await prisma.solicitud_registro.count({
       where: { estado },
     });
   }
@@ -173,7 +173,7 @@ export class SolicitudRepository {
    * Obtener estadísticas de solicitudes
    */
   async getEstadisticas() {
-    const total = await prisma.solicitudRegistro.count();
+    const total = await prisma.solicitud_registro.count();
     const pendientes = await this.countByEstado('Pendiente');
     const aprobadas = await this.countByEstado('Aprobado');
     const rechazadas = await this.countByEstado('Rechazado');
@@ -190,7 +190,7 @@ export class SolicitudRepository {
    * Buscar solicitudes por nombre de restaurante
    */
   async searchByNombreRestaurante(nombre: string) {
-    return await prisma.solicitudRegistro.findMany({
+    return await prisma.solicitud_registro.findMany({
       where: {
         nombre_propuesto_restaurante: {
           contains: nombre,
@@ -199,7 +199,7 @@ export class SolicitudRepository {
       },
       include: {
         usuario: true,
-        restaurantes: true,
+        restaurante: true,
       },
     });
   }

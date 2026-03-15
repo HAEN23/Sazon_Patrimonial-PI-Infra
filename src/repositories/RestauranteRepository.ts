@@ -7,9 +7,9 @@ export class RestauranteRepository {
     return await prisma.restaurante.findMany({
       include: {
         usuario: true,
-        solicitud: true,
+        solicitud_registro: true,
         favoritos: true,
-        menus: true,
+        menu: true,
       },
     });
   }
@@ -20,14 +20,14 @@ export class RestauranteRepository {
       where: { id_restaurante: id },
       include: {
         usuario: true,
-        solicitud: true,
+        solicitud_registro: true,
         favoritos: {
           include: {
             usuario: true,
           },
         },
-        menus: true,
-        comprobantes: true,
+        menu: true,
+        comprobante: true,
       },
     });
   }
@@ -38,7 +38,7 @@ export class RestauranteRepository {
       data,
       include: {
         usuario: true,
-        solicitud: true,
+        solicitud_registro: true,
       },
     });
   }
@@ -50,7 +50,7 @@ export class RestauranteRepository {
       data,
       include: {
         usuario: true,
-        solicitud: true,
+        solicitud_registro: true,
       },
     });
   }
@@ -91,8 +91,8 @@ export class RestauranteRepository {
     return await prisma.restaurante.findMany({
       where: { id_usuario },
       include: {
-        solicitud: true,
-        menus: true,
+        solicitud_registro: true,
+        menu: true,
       },
     });
   }

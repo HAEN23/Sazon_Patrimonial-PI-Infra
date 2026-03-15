@@ -8,7 +8,7 @@ export class RolRepository {
   async findAll() {
     return await prisma.rol.findMany({
       include: {
-        usuarios: {
+        usuario: {
           select: {
             id_usuario: true,
             nombre: true,
@@ -26,7 +26,7 @@ export class RolRepository {
     return await prisma.rol.findUnique({
       where: { id_rol: id },
       include: {
-        usuarios: {
+        usuario: {
           select: {
             id_usuario: true,
             nombre: true,
@@ -45,7 +45,7 @@ export class RolRepository {
     return await prisma.rol.findFirst({
       where: { nombre_rol },
       include: {
-        usuarios: true,
+        usuario: true,
       },
     });
   }

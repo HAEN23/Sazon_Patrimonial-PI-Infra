@@ -18,7 +18,7 @@ export class UsuarioRepository {
       include: {
         rol: true,
         favoritos: true,
-        restaurantes: true,
+        restaurante: true,
       },
     });
   }

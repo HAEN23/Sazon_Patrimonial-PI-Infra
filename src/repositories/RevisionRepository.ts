@@ -6,12 +6,12 @@ export class RevisionRepository {
    * Obtener todas las revisiones
    */
   async findAll() {
-    return await prisma.revisionSolicitud.findMany({
+    return await prisma.revision_solicitud.findMany({
       include: {
-        solicitud: {
+        solicitud_registro: {
           include: {
             usuario: true,
-            restaurantes: true,
+            restaurante: true,
           },
         },
         usuario: {
@@ -33,13 +33,13 @@ export class RevisionRepository {
    * Obtener revisión por ID
    */
   async findById(id: number) {
-    return await prisma.revisionSolicitud.findUnique({
+    return await prisma.revision_solicitud.findUnique({
       where: { id_revision: id },
       include: {
-        solicitud: {
+        solicitud_registro: {
           include: {
             usuario: true,
-            restaurantes: true,
+            restaurante: true,
           },
         },
         usuario: {
@@ -55,10 +55,10 @@ export class RevisionRepository {
    * Crear nueva revisión
    */
   async create(data: ICreateRevisionSolicitud) {
-    return await prisma.revisionSolicitud.create({
+    return await prisma.revision_solicitud.create({
       data,
       include: {
-        solicitud: true,
+        solicitud_registro: true,
         usuario: true,
       },
     });
@@ -68,7 +68,7 @@ export class RevisionRepository {
    * Eliminar revisión
    */
   async delete(id: number) {
-    return await prisma.revisionSolicitud.delete({
+    return await prisma.revision_solicitud.delete({
       where: { id_revision: id },
     });
   }
@@ -77,7 +77,7 @@ export class RevisionRepository {
    * Obtener revisiones por solicitud
    */
   async findBySolicitud(id_solicitud: number) {
-    return await prisma.revisionSolicitud.findMany({
+    return await prisma.revision_solicitud.findMany({
       where: { id_solicitud },
       include: {
         usuario: {
@@ -98,13 +98,13 @@ export class RevisionRepository {
    * Obtener revisiones realizadas por un usuario (admin)
    */
   async findByUsuario(id_usuario: number) {
-    return await prisma.revisionSolicitud.findMany({
+    return await prisma.revision_solicitud.findMany({
       where: { id_usuario },
       include: {
-        solicitud: {
+        solicitud_registro: {
           include: {
             usuario: true,
-            restaurantes: true,
+            restaurante: true,
           },
         },
       },
@@ -118,7 +118,7 @@ export class RevisionRepository {
    * Verificar si una solicitud ya fue revisada
    */
   async existeRevision(id_solicitud: number): Promise<boolean> {
-    const count = await prisma.revisionSolicitud.count({
+    const count = await prisma.revision_solicitud.count({
       where: { id_solicitud },
     });
     return count > 0;
@@ -128,7 +128,7 @@ export class RevisionRepository {
    * Obtener última revisión de una solicitud
    */
   async getUltimaRevision(id_solicitud: number) {
-    return await prisma.revisionSolicitud.findFirst({
+    return await prisma.revision_solicitud.findFirst({
       where: { id_solicitud },
       include: {
         usuario: {
@@ -148,7 +148,7 @@ export class RevisionRepository {
    * Contar revisiones por usuario
    */
   async countByUsuario(id_usuario: number) {
-    return await prisma.revisionSolicitud.count({
+    return await prisma.revision_solicitud.count({
       where: { id_usuario },
     });
   }
@@ -157,9 +157,9 @@ export class RevisionRepository {
    * Obtener estadísticas de revisiones
    */
   async getEstadisticas() {
-    const total = await prisma.revisionSolicitud.count();
+    const total = await prisma.revision_solicitud.count();
     
-    const porUsuario = await prisma.revisionSolicitud.groupBy({
+    const porUsuario = await prisma.revision_solicitud.groupBy({
       by: ['id_usuario'],
       _count: {
         id_revision: true,
