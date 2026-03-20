@@ -19,7 +19,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Función tabulada (corregida sintaxis a RETURN QUERY)
+
 CREATE OR REPLACE FUNCTION fn_obtener_favoritos_usuario(p_user_id INT) 
 RETURNS TABLE(nombre_restaurante VARCHAR, fecha_favorito DATE) AS $$
 BEGIN
@@ -62,7 +62,7 @@ GROUP BY e.id_restaurante, r.nombre, e.origen;
 -- 4. STORED PROCEDURES (Requisitos A, B y C del profesor)
 -- ==========================================
 
--- a) 1 con lógica de negocio compleja (NO un simple INSERT/UPDATE)
+
 -- Evalúa el estado de una solicitud, y si está aprobada, migra sus datos automáticamente para crear un nuevo registro de restaurante y actualiza el tracking.
 CREATE OR REPLACE PROCEDURE sp_procesar_solicitud_aprobada(p_id_solicitud INT)
 LANGUAGE plpgsql AS $$
@@ -98,7 +98,7 @@ LANGUAGE plpgsql AS $$
 DECLARE
     v_count_fav INT;
     v_count_enc INT;
-BEGIN  -- ← BEGIN explícito de la transacción
+BEGIN  
     
     -- Validación previa: si falla, hacemos ROLLBACK
     IF NOT EXISTS (SELECT 1 FROM "usuario" WHERE id_usuario = p_user_id) THEN
@@ -115,7 +115,7 @@ BEGIN  -- ← BEGIN explícito de la transacción
     GET DIAGNOSTICS v_count_enc = ROW_COUNT;
     
     -- Si todo salió bien, hacemos COMMIT
-    COMMIT;  -- ← COMMIT explícito
+    COMMIT;  
     
     RAISE NOTICE 'Eliminación exitosa. Favoritos eliminados: %, Encuestas eliminadas: %', v_count_fav, v_count_enc;
 END;
@@ -175,8 +175,7 @@ EXECUTE FUNCTION trg_check_spam_favoritos();
 -- ==========================================
 -- 6. CONSULTA REQUERIDA (CTEs y Subconsultas)
 -- ==========================================
--- El documento pide al menos 1 query con CTE (WITH) y 2 subconsultas
--- Esta vista/query extra asegura ese punto:
+
 
 CREATE OR REPLACE VIEW vw_analisis_top_restaurantes AS
 WITH TopRestaurantes AS (
@@ -189,5 +188,5 @@ WITH TopRestaurantes AS (
 SELECT r.nombre, r.direccion, tr.cantidad_favoritos
 FROM "restaurante" r
 JOIN TopRestaurantes tr ON r.id_restaurante = tr.id_restaurante
-WHERE r.id_usuario IN (SELECT id_usuario FROM "usuario" WHERE id_rol = 2) -- Subconsulta 1 (en el WHERE)
-AND r.id_restaurante NOT IN (SELECT id_restaurante FROM "encuesta_restaurante" WHERE origen = 'Extranjero'); -- Subconsulta 2
+WHERE r.id_usuario IN (SELECT id_usuario FROM "usuario" WHERE id_rol = 2) 
+AND r.id_restaurante NOT IN (SELECT id_restaurante FROM "encuesta_restaurante" WHERE origen = 'Extranjero'); 
