@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sazón Patrimonial - Infraestructura y Base de Datos
 
-## Getting Started
+Este repositorio centraliza la gestión del modelo de datos, la configuración de la base de datos relacional y los scripts de inicialización del proyecto Sazón Patrimonial.
 
-First, run the development server:
+## Arquitectura y Tecnologías
+* **Motor de Base de Datos:** PostgreSQL (Alojado en nube/Render).
+* **Modelado y Migraciones:** Prisma ORM (`schema.prisma`).
+* **Scripts:** Archivos SQL para DDL y requerimientos específicos de análisis.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* ## Modelo de Datos
+El esquema está completamente normalizado y cuenta con manejo estricto de integridad referencial.
+* **Llaves foráneas y restricciones:** Eliminación en cascada (`onDelete: Cascade`) y relaciones consistentes entre tablas maestras.
+* **Entidades Principales:** `usuario`, `rol`, `restaurante`, `encuesta_restaurante`, `favoritos`, `menu`, `solicitud_registro`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* ## Comandos de Administración de Base de Datos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para sincronizar la estructura definida en `schema.prisma` con la base de datos de PostgreSQL en producción de forma segura (sin pérdida de datos), se utilizan los siguientes comandos en bash:
+# Sincroniza el esquema con la base de datos forzando la actualización de columnas
+npx prisma db push
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Regenera los tipos de TypeScript para el uso del cliente Prisma
+npx prisma generate
 
-## Learn More
+## Durante el desarrollo de este proyecto, se utilizó asistencia de Inteligencia Artificial (Gemini) estrictamente como herramienta de consulta para la administración segura de la base de datos en producción:
 
-To learn more about Next.js, take a look at the following resources:
+Gestión de Migraciones en Producción: Asesoría sobre comandos seguros (db push vs migrate dev) para la adición de columnas dinámicas (String? opcionales) a tablas existentes en PostgreSQL alojadas en Render, evitando la pérdida de registros activos.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El modelo relacional completo, las entidades, la normalización, las restricciones lógicas y la elaboración de los scripts SQL fueron diseñados, comprendidos e implementados en su totalidad por el equipo.
